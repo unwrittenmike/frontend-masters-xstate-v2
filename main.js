@@ -1,16 +1,22 @@
 import "./style.css";
-import { createMachine, interpret } from "xstate";
+import { createMachine, interpret, assign } from "xstate";
 
 const machine = createMachine({
   initial: "loading",
+  context: {
+    count: 42,
+  },
   states: {
     loading: {
       entry: ["loadData"],
       on: {
         SUCCESS: {
-          actions: () => {
-            console.log("Assigning data");
-          },
+          actions: [
+            () => {
+              console.log("Assigning data");
+            },
+            assign({ count: (context, event) => context.count + event.value }),
+          ],
           target: "loaded",
         },
       },
@@ -28,7 +34,7 @@ const machine = createMachine({
 const service = interpret(machine).start();
 
 service.subscribe((state) => {
-  console.log(state.value, state.actions);
+  console.log(state.context);
 });
 
 window.service = service;

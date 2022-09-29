@@ -10,7 +10,7 @@ const playerMachine = createMachine({
     loading: {
       on: {
         LOADED: {
-          actions: [() => console.log("Assign data")],
+          actions: ["assignSongData"],
           target: "playing",
         },
       },
@@ -21,8 +21,8 @@ const playerMachine = createMachine({
       },
     },
     playing: {
-      entry: [() => console.log("Play song")],
-      exit: [() => console.log("Pause video")],
+      entry: ["playAudio"],
+      exit: ["pauseAudio"],
       on: {
         PAUSE: { target: "paused" },
       },
@@ -30,7 +30,6 @@ const playerMachine = createMachine({
   },
   on: {
     SKIP: {
-      actions: [() => console.log("Skip song")],
       target: "loading",
     },
     LIKE: {
@@ -40,7 +39,7 @@ const playerMachine = createMachine({
       actions: [() => console.log("Unlike song")],
     },
     DISLIKE: {
-      actions: [() => console.log("Dislike song"), raise({ type: "SKIP" })],
+      actions: ["dislikeSong", raise({ type: "SKIP" })],
     },
     VOLUME: {
       actions: [() => console.log("Change volume")],
@@ -48,6 +47,18 @@ const playerMachine = createMachine({
   },
 }).withConfig({
   actions: {
+    assignSongData: () => {
+      console.log("Assigning song data");
+    },
+    pauseAudio: () => {
+      console.log("Pause audio");
+    },
+    playAudio: () => {
+      console.log("Play audio");
+    },
+    dislikeSong: () => {
+      console.log("Dislike Song");
+    },
     // Add implementations for the actions here, if you'd like
     // For now you can just console.log something
   },
